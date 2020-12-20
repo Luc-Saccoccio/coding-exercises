@@ -13,3 +13,7 @@ Coding is great, math is life: Project Euler is an excellent website for math-re
 ## Prologin
 
 I started it in 2020, we'll see how it goes...
+
+## CodeForces
+
+Might take a look someday
