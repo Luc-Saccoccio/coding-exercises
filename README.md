@@ -17,3 +17,7 @@ I started it in 2020, we'll see how it goes...
 ## CodeForces
 
 Might take a look someday
+
+## Hackerrank
+
+Collection of problem I did to learn the languages I know now. Organized by languages and category.
