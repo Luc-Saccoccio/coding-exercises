@@ -5,10 +5,11 @@
 
 
 
-import Data.List (union)
+import           Data.List (union)
 
-problem_1 = sum (union [3,6..999] [5,10..999])
-problem_1_bis  = sum [x | x <- [1..999], x `mod` 3 == 0 || x `mod` 5 == 0]
+problem_1 :: Int
+problem_1 = sum $ union [3,6..999] [5,10..999]
 
+main :: IO ()
 main = do
-	print problem_1
+    print problem_1

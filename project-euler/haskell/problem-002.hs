@@ -7,3 +7,11 @@
 -- By considering the terms in the Fibonacci sequence whose values
 -- do not exceed four million, find the sum of the even-valued
 -- terms.
+
+fSum :: Int
+fSum = sum [x | x <- takeWhile (<=4000000) fibs, even x]
+    where fibs = 1:1:zipWith (+) fibs (tail fibs)
+
+main :: IO ()
+main = do
+    print fSum
