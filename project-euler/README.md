@@ -14,7 +14,7 @@ Problèmes résolus : 1
 
 ## Haskell
 
-Problèmes résolus : 3
+Problèmes résolus : 10
 
 ## C
 

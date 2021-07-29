@@ -4,7 +4,7 @@ Here is a collection of program I coded for programming contests/games on Intern
 
 ## Advent Of Code
 
-I started the advent of code in 2020, but you may find some older problems, mainly because I find it interesting to try all of them.
+Started in 2020. Some older edition' problems can be found.
 
 ## Project Euler
 
@@ -12,11 +12,11 @@ Coding is great, math is life: Project Euler is an excellent website for math-re
 
 ## Prologin
 
-I started it in 2020, we'll see how it goes...
+Tried in 2020, failed.
 
 ## CodeForces
 
-Might take a look someday
+Started in 2021. Very useful to train my skills on any language.
 
 ## Hackerrank
 

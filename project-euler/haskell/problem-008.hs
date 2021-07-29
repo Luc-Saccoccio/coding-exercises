@@ -3,10 +3,10 @@
 import Data.Char 
 import Data.List 
 
-main :: IO ()
-main = do
-   str <- readFile "problem-008.txt"
-   print . maximum . map product
+solution = maximum . map product
          . foldr (zipWith (:)) (repeat [])
          . take 13 . tails . map (fromIntegral . digitToInt)
-         . concat . lines $ str
+         . concat . lines
+
+main :: IO ()
+main = print . solution =<< readFile "problem-008.txt"
