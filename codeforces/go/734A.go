@@ -32,5 +32,4 @@ func main() {
 	} else {
 		fmt.Println("Friendship")
 	}
-
 }
