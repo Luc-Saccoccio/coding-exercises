@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<string.h>
 
-void process(char string[]) {
+void process(char* string) {
 	int l = strlen(string);
 	if (l > 10)
 		printf("%c%d%c\n", string[0], l-2, string[l-1]);
