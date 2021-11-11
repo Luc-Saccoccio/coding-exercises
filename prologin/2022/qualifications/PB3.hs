@@ -1,6 +1,14 @@
 import Data.List (group)
 import Control.Arrow ((&&&))
 
+{-
+ - TODO : * Finish the go function in bestLists and test first results
+ -        * Maybe fusion (And lower complexity) validSums and bestLists
+ -          or at least a bit of the functionality in validSums, especially
+ -          alreay selecting best lists for each divisors
+-}
+
+
 -- Return the list of the divisors of a number
 divisors :: Int -> [Int]
 divisors n = (foldr (go . (head &&& length)) [1] . group) $ fac n 2
@@ -34,21 +42,25 @@ computeSums list divs = go list ([], [])
                 go xs (sums, valids)
 
 -- Compute all (valid) sums. Not the smartest way : to enhance
-validSums :: Int -> [Int] -> [[Int]] -> [(Int, [Int])]
-validSums x sums lists = go lists sums []
+validSums :: Int -> [Int] -> [[Int]] -> ([Int], [[Int]])
+validSums x sums lists = go lists sums ([], [])
     where
-        go :: [[Int]] -> [Int] -> [(Int, [Int])] -> [(Int, [Int])]
-        go [] [] valids = valids
-        go (l:ls) (s:ss) valids =
+        go :: [[Int]] -> [Int] -> ([Int], [[Int]]) -> ([Int], [[Int]])
+        go [] [] v = v
+        go (l:ls) (s:ss) (valids, validl) =
             if (x `div` s) `elem` sums then
-                go ls ss ((s,l):valids)
+                go ls ss (s:valids, l:validl)
             else
-                go ls ss valids
+                go ls ss (valids, validl)
         go _ _ _ = error "Mais toujours pas en fait"
 
--- Return the two best sums in the correct order to print them
-twoBestSum :: [(Int, [Int])] -> ([Int], [Int])
-twoBestSum _ = ([], [])
+-- Keeps the bests lists for each couple of divisor
+bestLists :: ([Int], [[Int]]) -> [(Int, Int)] -> [([Int], [Int])]
+bestLists (sums, lists) = go
+    where
+        go :: [(Int, Int)] -> [([Int], [Int])] -> [([Int], [Int])]
+        go [] [] v = v
+        go ((a, b):xs) lists v = v -- TODO
 
 -- Solution to the given problem
 solution :: String -> String
@@ -63,7 +75,13 @@ solution input = show lists
         divs :: [Int]
         divs = divisors x
 
-        lists :: [(Int, [Int])]
+        nDivs :: Int
+        nDivs = length divs
+
+        divsCouples :: [(Int, Int)]
+        divsCouples = [(n, x `div` n) | n <- take (nDivs `div` 2) divs]
+
+        lists :: ([Int], [[Int]])
         lists = uncurry (validSums x) $ flip computeSums divs . subLists (list!!1) $ drop 2 list
 
 
