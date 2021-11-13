@@ -1,17 +1,21 @@
-import Data.List (group)
-import Control.Arrow ((&&&))
+import           Control.Arrow    ((&&&))
+import           Data.IntMap.Lazy (IntMap, delete, empty, insertWith, keys,
+                                   member)
+import           Data.List        (group)
 
 {-
- - TODO : * Finish the go function in bestLists and test first results
- -        * Maybe fusion (And lower complexity) validSums and bestLists
- -          or at least a bit of the functionality in validSums, especially
- -          alreay selecting best lists for each divisors
+ - TODO : * Treat the case where X = 0 !
 -}
 
+type DivList = IntMap [Int]
+
+del :: Eq a => a -> [a] -> Maybe [a]
+del _ []     = Nothing
+del n (x:xs) = if x == n then Just xs else (x:) <$> del n xs
 
 -- Return the list of the divisors of a number
 divisors :: Int -> [Int]
-divisors n = (foldr (go . (head &&& length)) [1] . group) $ fac n 2
+divisors n = (foldr (go . (head &&& length)) [1] . group) $ fac (abs n) 2
     where
     go (_, 0) xs = xs
     go (p, k) xs = let ys = map (* p) xs in go (p, pred k) ys ++ xs
@@ -25,64 +29,64 @@ slice :: Int -> Int -> [a] -> [a]
 slice i k xs | i>0 = take (k-i+1) $ drop (i-1) xs
 slice _ _ _ = error "Alors non"
 
--- Return all the sublists of a list. There is probably a more efficient method
-subLists :: Int -> [a] -> [[a]]
-subLists n l = [slice j i l | i <- [0..n], j <- [1..i]]
-
--- Compute all (semi-valid) sums
-computeSums :: [[Int]] -> [Int] -> ([Int], [[Int]])
-computeSums list divs = go list ([], [])
+-- Return the longest sublist for each divisor, in a map (i.e. dictionnary)
+semiValidSubLists :: Int -> [Int] -> [Int] -> DivList
+semiValidSubLists n divs l = go slices
     where
-        go [] sums = sums
-        go (x:xs) (sums, valids) =
+        slices :: [[Int]]
+        slices = [slice j i l | i <- [0..n], j <- [1..i]]
+
+        -- insertWith : O(min(n, W)), n being number of entries in tree and W number of bits in Int
+        go :: [[Int]] -> DivList
+        go []     = empty
+        go (x:xs) =
             let s = sum x in
-            if s `elem` divs then
-                go xs (s:sums, x:valids)
-            else
-                go xs (sums, valids)
+                if abs s `elem` divs then
+                    insertWith cmp s x $ go xs
+                else
+                    go xs
 
--- Compute all (valid) sums. Not the smartest way : to enhance
-validSums :: Int -> [Int] -> [[Int]] -> ([Int], [[Int]])
-validSums x sums lists = go lists sums ([], [])
+        -- O(n+m) : computes both length -> to enhance
+        cmp :: [Int] -> [Int] -> [Int]
+        cmp a b = if length a > length b then a else b
+
+-- Remove all invalid list
+-- TODO : not able to spot (-x)(-y) = xy !
+-- TODO : in fact this functions doesn't work ._.
+validSums :: Int -> [Int] -> DivList -> DivList
+validSums n divs lists = go divs []
     where
-        go :: [[Int]] -> [Int] -> ([Int], [[Int]]) -> ([Int], [[Int]])
-        go [] [] v = v
-        go (l:ls) (s:ss) (valids, validl) =
-            if (x `div` s) `elem` sums then
-                go ls ss (s:valids, l:validl)
-            else
-                go ls ss (valids, validl)
-        go _ _ _ = error "Mais toujours pas en fait"
+        go :: [Int] -> [Int] -> DivList
+        go [] _ = lists
+        go (x:xs) done =
+            let m = x `div` n in
+            case del x done of
+               Just l -> go xs l -- The job is already done bois
+               Nothing ->
+                    if member m lists then
+                        go xs (m:done) -- divs is constructed without duplicates, so no need to add x
+                    else
+                        delete m $ go xs done -- No need to add it to done, it won't appear
 
--- Keeps the bests lists for each couple of divisor
-bestLists :: ([Int], [[Int]]) -> [(Int, Int)] -> [([Int], [Int])]
-bestLists (sums, lists) = go
-    where
-        go :: [(Int, Int)] -> [([Int], [Int])] -> [([Int], [Int])]
-        go [] [] v = v
-        go ((a, b):xs) lists v = v -- TODO
+-- TODO Returns the two best lists (by maximum sum of length)
+bestLists :: DivList -> ([Int], [Int])
+bestLists l = ([], [])
 
--- Solution to the given problem
+-- TODO Solution to the given problem
 solution :: String -> String
-solution input = show lists
+solution rawInput = show lists
     where
-        list :: [Int]
-        list = map (\n -> read n :: Int) . words $ input
+        input :: [Int]
+        input = map (\n -> read n :: Int) . words $ rawInput
 
         x :: Int
-        x = head list
+        x = head input
 
         divs :: [Int]
         divs = divisors x
 
-        nDivs :: Int
-        nDivs = length divs
-
-        divsCouples :: [(Int, Int)]
-        divsCouples = [(n, x `div` n) | n <- take (nDivs `div` 2) divs]
-
-        lists :: ([Int], [[Int]])
-        lists = uncurry (validSums x) $ flip computeSums divs . subLists (list!!1) $ drop 2 list
+        lists :: DivList
+        lists = uncurry (validSums x) . (keys &&& id) . semiValidSubLists x divs $ drop 2 input -- See if it's possible to <not> use keys (O(n)) but calculate it in semiValidSubLists
 
 
 main :: IO ()
