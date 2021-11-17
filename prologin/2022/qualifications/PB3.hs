@@ -9,6 +9,7 @@ import           Data.List        (group)
 {-
  - TODO : * Maybe fusion bestLists and validSums to do one less tree traversal
  -        Idea : to reduce divisor checking use a Hashtable
+ - TODO : There must be a smarter way to find good sublists. It's taking too much time
  -
  - Hey, no one's gonna read this piece of shit that is my code
  - So who cares if I'm the only one to understand my comments ¯\_(ツ)_/
