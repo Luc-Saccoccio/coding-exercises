@@ -14,7 +14,7 @@ PB3: ## Compile problem 3
 	${GHC} ${GHCFLAGS} $@.hs -o $@
 
 PB4: ## Compile problem 4
-	${GHC} ${GHCFLAGS} $@.hs -o $@
+	${CC} ${CFLAGS} $@.c -o $@
 
 clean: ## Remove executables and build files
 	rm -f PB1{,.hi,.o}
@@ -24,4 +24,4 @@ clean: ## Remove executables and build files
 
 all: PB1 PB2 PB3 PB4
 
-.PHONY: PB1 PB2 PB3 clean
+.PHONY: PB1 PB2 PB3 PB4 clean

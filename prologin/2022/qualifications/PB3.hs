@@ -5,8 +5,8 @@ import           Control.Monad      (liftM2)
 import           Data.IntMap.Strict (IntMap, empty, insertWith, (!?))
 import           Data.List          (group)
 import           Data.Maybe         (fromJust)
-import qualified Data.Set           as Set (Set, foldr, fromList, member,
-                                            singleton, takeWhileAntitone)
+import qualified Data.Set           as Set (Set, foldl, fromList, member,
+                                            singleton, filter)
 
 {-
  - Hey, no one's gonna read this piece of shit that is my code
@@ -54,15 +54,14 @@ slice _ _ _ = error "Alors non" -- Nope. Won't happen.
 
 -- Return the longest sublist for each divisor, in a map (i.e. dictionnary)
 semiValidSubLists :: Int -> DivSet -> [Int] -> DivList
-semiValidSubLists n divs l = foldr alter empty slices
+semiValidSubLists n divs l = foldr select empty slices
     where
         -- All possible slices
         slices :: [SubList]
         slices = [(j, i) | i <- [0..n], j <- [1..i]]
 
-        -- Alter or not the tree (by inserting the sublist)
-        alter :: SubList -> DivList -> DivList
-        alter (start, finish) =
+        select :: SubList -> DivList -> DivList
+        select (start, finish) =
             let s = sum (slice start finish l) in
                 if abs s `Set.member` divs then
                     insertWith cmp s (start, finish)
@@ -78,17 +77,17 @@ semiValidSubLists n divs l = foldr alter empty slices
 
 -- Return the two best lists
 bestLists :: Int -> DivSet -> DivList -> (SubList, SubList)
-bestLists n d lists = snd $ Set.foldr select (0, ((0, 0), (0, 0))) divs
+bestLists n d lists = snd $ Set.foldl select (0, ((0, 0), (0, 0))) divs
     where
-        select :: Int -> (Int, (SubList, SubList)) -> (Int, (SubList, SubList))
-        select divisor (len, (l1, l2)) =
+        select :: (Int, (SubList, SubList)) -> Int -> (Int, (SubList, SubList))
+        select (len, (l1, l2)) divisor =
             case (lists !? divisor, lists !? (n `div` divisor)) of
               (Just l1', Just l2') -> let len' = diff l1' + diff l2'
                                      in if len' > len then (len', (l1', l2')) else (len, (l1, l2))
               _ -> (len, (l1, l2))
 
         divs :: DivSet
-        divs = Set.takeWhileAntitone (<=isqrt n) d
+        divs = Set.filter (<=isqrt n) d
 
 -- Return the correct formatted string
 formatSolution :: [Int] -> (SubList, SubList) -> String
@@ -123,7 +122,7 @@ solution rawInput =
         let lists = semiValidSubLists n divs list in
             case bestLists x divs lists of
               ((0, 0), (0, 0)) -> "IMPOSSIBLE"
-              sub -> formatSolution list sub
+              sub              -> formatSolution list sub
 
     where
         -- List of number making the input
