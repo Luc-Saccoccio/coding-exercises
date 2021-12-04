@@ -4,7 +4,7 @@ GHCFLAGS=-Wall -Werror -fprof-auto -fprof-cafs -rtsopts -threaded -O2 -dynamic
 CC=tcc
 CFLAGS=-Wall -Wextra -Werror -std=c99 -lm
 
-all: ${GOAL} test
+all: clean ${GOAL} test
 
 haskell:
 	${GHC} ${GHCFLAGS} Main.hs -o $@
