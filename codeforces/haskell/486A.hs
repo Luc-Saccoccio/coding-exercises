@@ -1,7 +1,10 @@
 {-# LANGUAGE TypeApplications #-}
 
 f :: Int -> Int
-f = sum . zipWith (*) (cycle [-1, 1]) . enumFromTo 1
+f x
+  | even x = x`div`2
+  | otherwise = -((x`div`2) + 1)
+
 
 solution :: String -> String
 solution = show . f . (read @Int)
