@@ -24,7 +24,7 @@ mappings :: [Map Char Char]
 mappings = map (fromList . zip "abcdefg") (permutations "abcdefg")
 
 solve :: String -> Int
-solve = readOutput . choose . flip map mappings . (. ((renderSignal .) . apply)) . flip map . filter ("|" /=) . words
+solve = readOutput . choose . flip map mappings . ( . ((renderSignal . ) . apply)) . flip map . filter ("|" /=) . words
     where
         apply :: Ord a => Map a b -> [a] -> [b]
         apply = map . (fromJust .) . flip lookup
