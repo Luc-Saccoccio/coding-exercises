@@ -10,7 +10,7 @@ Problèmes résolus : 19
 
 ## OCaml
 
-Problèmes résolus : 1
+Problèmes résolus : 3
 
 ## Haskell
 

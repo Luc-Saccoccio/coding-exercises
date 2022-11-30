@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 
-int solution(unsigned long long n) {
+unsigned long long solution(unsigned long long n) {
 	unsigned long long i;
 	for(i=2ULL; i<n; i++) {
 		printf("%llu\n", i);

@@ -24,7 +24,7 @@ int solution_v2(void) {
 	int palindrome = 0, prod;
 	for(int i=1000; i>=100; i -= 1) {
 		printf("Hey");
-		for (int j=1000; j>=i; i -= 1) {
+		for (int j=1000; j>=i; j -= 1) {
 			prod = i * j;
 			if(test_palindrome(prod) && prod > palindrome) {
 				palindrome = prod;
