@@ -4,7 +4,9 @@ Here is a collection of program I coded for programming contests/games on Intern
 
 ## Advent Of Code
 
-Started in 2020. Some older edition' problems can be found.
+The years from 2015 to 2019 were done outside context
+
+The years after were done in conditions _for some problems_
 
 ## Project Euler
 
