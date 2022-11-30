@@ -417,6 +417,65 @@ let at_level n =
   in
   aux [] 0
 
+(* 63 *)
+let complete_binary_tree l =
+  let arr = Array.of_list l in
+  let n = Array.length arr in
+  let rec aux x =
+    if x > n then Empty else Node (arr.(x - 1), aux (2 * x), aux ((2 * x) + 1))
+  in
+  aux 1
+
+let is_complete_binary_tree n t = (* Compare structure *)
+  let rec aux t1 t2 =
+    match (t1, t2) with
+    | Empty, Empty -> true
+    | Node (_, l, r), Node (_, g, d) -> aux l g && aux r d
+    | _, _ -> false
+  and tree = complete_binary_tree (List.init n (fun _ -> 1)) in
+  aux tree t
+
+(* 64 *)
+let layout_binary_tree t =
+  let rec aux x y = function
+    | Empty -> (Empty, x)
+    | Node (v, l, r) ->
+        let l', x' = aux x (y + 1) l in
+        let r', x'' = aux (x' + 1) y r in
+        (Node ((v, (x', y)), l', r'), x'')
+  in
+  aux 1 1 t |> fst
+
+(* 65 *)
+let rec depth = function
+  | Empty -> 0
+  | Node (_, l, r) -> 1 + max (depth l) (depth r)
+
+let rec left_depth = function Empty -> 0 | Node (_, l, _) -> 1 + left_depth l
+
+let layout_binary_tree_2 t =
+  let d = depth t and ld = left_depth t in
+  let a = (1 lsl d) - (1 lsl ld) + 1 and b = 1 lsl (d - 2) in
+  let rec aux x y s = function
+    | Empty -> Empty
+    | Node (v, l, r) ->
+        let y' = y + 1 and s' = s / 2 in
+        Node ((v, (x, y)), aux (x - s) y' s' l, aux (x + s) y' s' r)
+  in
+  aux a 1 b t
+
+(* 66 *)
+  (* TODO *)
+
+(* 67 *)
+let rec string_of_tree = function
+  | Empty -> ""
+  | Node (x, Empty, Empty) -> String.make 1 x
+  | Node (x, l, r) ->
+      Printf.sprintf "%c(%s,%s)" x (string_of_tree l) (string_of_tree r)
+
+  (* TODO *)
+
 (* MULTIWAY TREES *)
 type 'a mult_tree = T of 'a * 'a mult_tree list
 
