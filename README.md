@@ -36,6 +36,10 @@ Used for
 
 Collection of (random) problems. Organized by languages and category.
 
+## Leetcode
+
+Maybe someday I'll try it
+
 ## Project Euler
 
 Coding is great, math is life: Project Euler is an excellent website for math-related problems.
