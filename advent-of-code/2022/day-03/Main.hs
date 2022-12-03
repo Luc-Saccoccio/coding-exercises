@@ -30,7 +30,7 @@ score = S.foldr' (+) 0 . S.map priority . f
     f (x:xs) = foldl' S.intersection x xs
 
 part1 :: String -> Int
-part1 = sum . map score . map splitInTwo . lines
+part1 = sum . map (score . splitInTwo) . lines
 
 part2 :: String -> Int
 part2 = sum . map score . takeThree . lines
