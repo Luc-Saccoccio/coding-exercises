@@ -16,7 +16,7 @@ ocaml:
 	ocamlopt -o $@ main.ml
 
 test: ${GOAL}
-	./${GOAL}
+	time ./${GOAL}
 
 clean:
 	rm -f *.o *.hi *.cmi *.cmx c haskell ocaml
