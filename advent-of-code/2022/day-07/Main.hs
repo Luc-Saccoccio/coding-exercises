@@ -2,11 +2,11 @@
 
 module Main where
 
-import Control.Arrow ((&&&))
+import           Control.Arrow       ((&&&))
 import qualified Data.HashMap.Strict as HM
-import Data.List (intercalate, isPrefixOf)
-import Data.Maybe (fromMaybe)
-import Text.Read (readMaybe)
+import           Data.List           (intercalate, isPrefixOf)
+import           Data.Maybe          (fromMaybe)
+import           Text.Read           (readMaybe)
 
 type FS = HM.HashMap String Int
 
