@@ -1,6 +1,6 @@
 GOAL=haskell
 GHC=ghc
-GHCFLAGS=-Wall -Werror -fprof-auto -fprof-cafs -rtsopts -threaded -O2 -dynamic
+GHCFLAGS=-Wall -Werror -fprof-auto -fprof-cafs -rtsopts -threaded -O2
 CC=cc
 CFLAGS=-Wall -Wextra -Werror -std=c99 -lm
 
