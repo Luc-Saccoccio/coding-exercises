@@ -19,4 +19,4 @@ test: ${GOAL}
 	time ./${GOAL}
 
 clean:
-	rm -f *.o *.hi *.cmi *.cmx c haskell ocaml
+	rm -f *.dyn_o *.o *.dyn_hi *.hi *.cmi *.cmx c haskell ocaml
