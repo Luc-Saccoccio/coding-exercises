@@ -1,30 +1,28 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE TypeApplications  #-}
 
 module Main where
 
-import Control.Arrow ((&&&))
-import Data.Either (fromRight)
-import Data.HashMap.Strict ((!), (!?))
-import qualified Data.HashMap.Strict as HM
-import Data.Maybe (fromMaybe)
-import qualified Data.Text as T
-import qualified Data.Text.IO as T
-import Data.Void
-import Text.Megaparsec
-import Text.Megaparsec.Char
+import           Control.Arrow        ((&&&))
+import           Data.Either          (fromRight)
+import           Data.HashMap.Strict  ((!))
+import qualified Data.HashMap.Strict  as HM
+import qualified Data.Text            as T
+import qualified Data.Text.IO         as T
+import           Data.Void
+import           Text.Megaparsec
+import           Text.Megaparsec.Char
 
-data Monkey
-  = Number Int
-  | Operation
-      { left :: T.Text,
-        op :: Int -> Int -> Int,
-        inv :: Int -> Int -> Int,
-        com :: Bool,
-        right :: T.Text
-      }
-  | Human
+data Monkey = Number Int
+            | Operation
+              { left  :: T.Text
+              , op    :: Int -> Int -> Int
+              , inv   :: Int -> Int -> Int
+              , com   :: Bool
+              , right :: T.Text
+              }
+            | Human
 
 type Monkeys = HM.HashMap T.Text Monkey
 
@@ -70,12 +68,12 @@ isHuman monkeys name
 computeHuman :: T.Text -> Monkeys -> Int -> Int
 computeHuman name monkeys target
   | Human <- monkey = target
-  | humanLeft = computeHuman (left monkey) monkeysR targetL
-  | humanRight = computeHuman (right monkey) monkeysL targetR
+  | humanLeft       = computeHuman (left monkey) monkeysR targetL
+  | otherwise        = computeHuman (right monkey) monkeysL targetR
   where
     monkey = monkeys ! name
-    humanLeft  = isHuman monkeys (left monkey)
-    humanRight = isHuman monkeys (right monkey)
+    humanLeft = isHuman monkeys (left monkey)
+    -- humanRight = isHuman monkeys (right monkey)
     (monkeysL, resL) = compute (left monkey) monkeys
     (monkeysR, resR) = compute (right monkey) monkeys
     targetL = inv monkey target resR
